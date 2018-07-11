@@ -37,11 +37,11 @@ def createImgPatches(source,patch_size):
     
         img_path = source + 'image' + str(i) + '.png'
         mask_path = source + 'image' + str(i) + '_poly.png'   
-        binmask_path = source + 'image' + str(i) + 'maskbin.png'
+        binmask_path = source + 'image' + str(i) + '_maskbin.png'
 
         img = pad_zeros(io.imread(img_path)[:,:,:3],patch_size,patch_size,3)
         mask = pad_zeros(io.imread(mask_path)[:,:,:3],patch_size,patch_size,3)
-        binmask = pad_zeros(io.imread(mask_path),patch_size,patch_size,1)
+        binmask = pad_zeros(io.imread(binmask_path),patch_size,patch_size,1)
 
         img_patches = extract_patches(img,(patch_size,patch_size))
         mask_patches = extract_patches(mask,(patch_size,patch_size))
