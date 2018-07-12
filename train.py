@@ -8,17 +8,16 @@ from skimage import transform, io
 from sklearn.model_selection import train_test_split
 from itertools import chain
 
-def dice_loss(input,target):
-    """
-    input is a torch variable of size BatchxnclassesxHxW representing log probabilities for each class
-    target is a 1-hot representation of the groundtruth, shoud have same size as the input
-    """
+"""def dice_loss(input,target):
+    '''input is a torch variable of size BatchxnclassesxHxW representing log probabilities for each class
+    target is a 1-hot representation of the groundtruth, shoud have same size as the input'''
+    
     assert input.size() == target.size(), "Input sizes must be equal."
     assert input.dim() == 4, "Input must be a 4D Tensor."
     uniques=np.unique(target.numpy())
     assert set(list(uniques))<=set([0,1]), "target must only contain zeros and ones"
 
-    probs=F.softmax(input)
+    probs=F.sigmoid(input)
     num=probs*target#b,c,h,w--p*g
     num=torch.sum(num,dim=3)#b,c,h
     num=torch.sum(num,dim=2)
@@ -39,7 +38,18 @@ def dice_loss(input,target):
 
     dice_total=-1*torch.sum(dice_eso)/dice_eso.size(0)#divide by batch_sz
 
-    return dice_total
+    return dice_total """
+
+def dice_loss(input, target):
+	input = torch.sigmoid(input)
+	smooth = 1
+
+	iflat = input.view(-1)
+	tflat = target.view(-1)
+	intersection = (iflat * tflat).sum()
+
+	return 1 - ((2. * intersection + smooth) /
+		(iflat.sum() + tflat.sum() + smooth))
 
 def batch(iterable1,batch_size):
     """Yields lists by batch"""

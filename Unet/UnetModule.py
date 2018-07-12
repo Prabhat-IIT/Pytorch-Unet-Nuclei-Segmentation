@@ -67,7 +67,6 @@ class UpConv(nn.Module):
 		# spatial size of X1 < spatial size of X2
 		diffX, diffY = (X2.size()[2] - X1.size()[2], X2.size()[3] - X1.size()[3])
 		X1 = F.pad(X1, (diffX//2, diffX - diffX//2, diffY//2, diffY - diffY//2))
-		print(X1.shape, X2.shape)
 		X = torch.cat([X2,X1], dim=1)
 		return self.conv(X)
 
