@@ -19,12 +19,12 @@ img_files = os.listdir('./train-img256x256')
 train_files , test_files = train_test_split(img_files,test_size = 0.1)
 
 for file in train_files:
-	shutil.move(IMG_DIR + file, 'Train/Image/')
-	shutil.move(BIN_MASK_DIR + file, 'Train/Mask/')
+	shutil.move(IMG_DIR + file, 'Train/Images/')
+	shutil.move(BIN_MASK_DIR + file, 'Train/Masks/')
 
 for file in test_files:
-	shutil.move(IMG_DIR + file, 'Test/Image/')
-	shutil.move(BIN_MASK_DIR + file , 'Test/Mask/')
+	shutil.move(IMG_DIR + file, 'Test/Images/')
+	shutil.move(BIN_MASK_DIR + file , 'Test/Masks/')
 
 print('Done')
 		

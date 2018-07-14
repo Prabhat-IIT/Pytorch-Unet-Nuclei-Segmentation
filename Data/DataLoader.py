@@ -15,7 +15,7 @@ class NucleiSegTrain(Dataset):
 		if self.path[-1] != '/':
 			self.path = self.path + '/'
 		self.transforms = transforms
-		self.list = os.listdir(self.path + 'Image')
+		self.list = os.listdir(self.path + 'Images')
 
 	def __len__(self):
 		return len(self.list)
@@ -24,8 +24,8 @@ class NucleiSegTrain(Dataset):
 		if self.path[-1] != '/':
 			self.path = self.path + '/'
 
-		IMG_PATH = self.path + 'Image/'
-		MASK_PATH = self.path + 'Mask/'
+		IMG_PATH = self.path + 'Images/'
+		MASK_PATH = self.path + 'Masks/'
 
 		img = io.imread(IMG_PATH + self.list[idx])
 		img = img_as_float32(img)
@@ -44,7 +44,7 @@ class NucleiSegVal(Dataset):
 		if self.path[-1] != '/':
 			self.path = self.path + '/'
 		self.transforms = transforms
-		self.list = os.listdir(self.path + 'Image')
+		self.list = os.listdir(self.path + 'Images')
 
 	def __len__(self):
 		return len(self.list)
@@ -53,8 +53,8 @@ class NucleiSegVal(Dataset):
 		if self.path[-1] != '/':
 			self.path = self.path + '/'
 
-		IMG_PATH = self.path + 'Image/'
-		MASK_PATH = self.path + 'Mask/'
+		IMG_PATH = self.path + 'Images/'
+		MASK_PATH = self.path + 'Masks/'
 
 		img = io.imread(IMG_PATH + self.list[idx])
 		img = img_as_float32(img)

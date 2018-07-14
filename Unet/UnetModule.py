@@ -72,7 +72,7 @@ class UpConv(nn.Module):
 
 class OutConv(nn.Module):
 	"""Final Output layer with kernel size = 1"""
-	def __init__(self, In_ch, Out_ch):
+	def __init__(self, In_ch, Out_ch):y
 		super(OutConv, self).__init__()
 		self.conv = nn.Conv2d(In_ch, Out_ch,1)
 
