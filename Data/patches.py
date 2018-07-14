@@ -3,7 +3,7 @@ import glob
 import numpy as np
 from skimage import io
 from patchHelper import extract_patches, pad_zeros
-from Utils import batchStainNormalize
+from preprocess import batchStainNormalize
 
 
 

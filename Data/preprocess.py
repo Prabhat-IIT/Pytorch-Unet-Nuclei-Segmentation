@@ -1,13 +1,12 @@
 import os 
 import glob
 from skimage import io, transform, img_as_float32, img_as_ubyte
-import skimage.io as io
-
 from staintools import ReinhardNormalizer,VahadaneNormalizer,MacenkoNormalizer
 from staintools.utils.visual import patch_grid, build_stack
 
+print('hello world')
 
-TARGET_IMG_PATH = './he.png'
+TARGET_IMG_PATH = '../he.png'
 
 target = io.imread(TARGET_IMG_PATH)
 
@@ -52,5 +51,7 @@ def batchStainNormalize(batch, method = 'V'):
 		batch[i] = img	
 	return batch	
 
+if __name__ == '__main__':
+	print('hello world')
 
 	

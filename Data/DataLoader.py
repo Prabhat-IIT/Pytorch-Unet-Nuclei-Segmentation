@@ -63,7 +63,7 @@ class NucleiSegVal(Dataset):
 		if self.transforms is not None:
 			img = self.transforms(img)
 			mask = self.transforms(mask)
-		return img, mask		
+		return img, mask, self.list[idx]
 
 
 		
