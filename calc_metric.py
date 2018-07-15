@@ -129,7 +129,7 @@ aggr_jacard = []
 for images in tqdm(image_names):
     
     S = np.expand_dims(np.array(Image.open('results/'+images).convert('L')),axis=-1)
-    G = np.expand_dims(np.array(Image.open('Data/Test/Masks'+images).convert('L')),axis=-1)
+    G = np.expand_dims(np.array(Image.open('Data/Test/Masks/'+images).convert('L')),axis=-1)
     #print S.shape
     #G.shape
     print(Acc_Jacard_Index(G,S))

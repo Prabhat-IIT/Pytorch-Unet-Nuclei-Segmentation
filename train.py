@@ -108,7 +108,9 @@ def train_net(net,train_set,test_set,epochs=5,batch_size=1,lr=0.1,val_ratio=0.1,
             if cuda:
                 imgs = imgs.cuda()
                 t_masks = t_masks.cuda()
-                
+            if i==0:
+                print(imgs.shape)
+                print(t_masks.shape)
             imgs = Variable(imgs)
             t_masks = Variable(t_masks)
 
@@ -133,8 +135,8 @@ def train_net(net,train_set,test_set,epochs=5,batch_size=1,lr=0.1,val_ratio=0.1,
         val_loss = 0
         for i,(imgs,t_masks) in enumerate(test_loader):
             if i==0:
-                print(imgs.dtype)
-                print(t_masks.dtype)
+                print(imgs.dtype,imgs.shape)
+                print(t_masks.dtype,t_masks.shape)
             if cuda:
                 imgs = imgs.cuda()
                 t_masks = t_masks.cuda()

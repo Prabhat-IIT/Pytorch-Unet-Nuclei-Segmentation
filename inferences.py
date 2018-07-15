@@ -1,10 +1,9 @@
 from tqdm import tqdm
 import os
-os.environ["CUDA_VISIBLE_DEVICES"]="1"
 import torch
 from Unet import Unet
 from torch.utils.data import DataLoader
-from data_loader import NucleiSegVal
+from DataLoader import NucleiSegVal
 from torchvision import transforms
 import torch.nn.functional as F    
 import numpy as np
@@ -62,16 +61,16 @@ if __name__ == '__main__':
     batch_size=1
 
     # Load model
-    model_name = ''
-    net = UNet(3, 1)
+    model_name = 'cp_5_0.6919249938084528.pth.tar'
+    net = Unet(3, 1)
 
-    net.load_state_dict(torch.load('./Models/' + model_name))
+    net.load_state_dict(torch.load('./Weights/' + model_name))
     net.eval()
 
 
   
     seed = 1
-    transformations_test = transforms.Compose([transforms.ToTensor()]) 
+    transformations_test = None
     test_set = NucleiSegVal(transforms = transformations_test)
     test_loader = DataLoader(test_set, batch_size=batch_size, shuffle = False)
     ious = np.zeros(len(test_loader))
@@ -80,13 +79,14 @@ if __name__ == '__main__':
 
     i = 0
     for xx, yy, name in tqdm(test_loader):
-        
+        print(xx.shape,yy.shape)
         name = name[0][:-4]
-        print name
+        print(name)
         pred = net(xx)
         pred = F.sigmoid(pred)
         pred = pred.detach().numpy()[0,0,:,:]
         mask = yy.numpy()[0,0,:,:]
+        print(mask.shape,pred.shape)
         xx = xx.numpy()[0,:,:,:].transpose(1,2,0)
         img = exposure.rescale_intensity(np.squeeze(xx), out_range=(0,1))
 
@@ -96,9 +96,10 @@ if __name__ == '__main__':
 
         # Remove regions smaller than 2% of the image
         #pr = remove_small_regions(pr, 0.02 * np.prod(img_size))
-
+        if not os.path.isdir('./results'):
+            os.mkdir('./results')
         io.imsave('results/{}.png'.format(name), pr*255)
-
+        print(gt.shape,pr.shape)
         ious[i] = IoU(gt, pr)
         dices[i] = Dice(gt, pr)
         
@@ -106,8 +107,8 @@ if __name__ == '__main__':
         if i == len(test_loader):
             break
 
-    print ('Mean IoU:', ious.mean())
-    print ('Mean Dice:', dices.mean())
+    print('Mean IoU:', ious.mean())
+    print('Mean Dice:', dices.mean())
     
     
     
