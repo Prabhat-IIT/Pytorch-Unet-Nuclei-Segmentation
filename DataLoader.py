@@ -13,36 +13,35 @@ class NucleiSegTrain(Dataset):
 		self.path = path
 		if self.path[-1] != '/':
 			self.path = self.path + '/'
-		self.transforms = transforms
-		self.list = os.listdir(self.path + 'Images')
+			self.transforms = transforms
+			self.list = os.listdir(self.path + 'Images')
 
 	def __len__(self):
 		return len(self.list)
 
 	def __getitem__(self, index):
-        image_path = 'Train/Image/'
-        mask_path = 'Train/Mask/'
-        image = Image.open(image_path + self.list[index])
-        image = image.convert('RGB')
-        mask = Image.open(mask_path + self.list[index])
-        mask = mask.convert('L')
-        if self.transforms is not None:
-            image = self.transforms(image)
-            mask = self.transforms(mask)
+		image_path = 'Train/Image/'
+		mask_path = 'Train/Mask/'
+		image = Image.open(image_path + self.list[index])
+		image = image.convert('RGB')
+		mask = Image.open(mask_path + self.list[index])
+		mask = mask.convert('L')
+		if self.transforms is not None:
+			image = self.transforms(image)
+			mask = self.transforms(mask)
             # If the transform variable is not empty
             # then it applies the operations in the transforms with the order that it is created.
         return image, mask
 
 class NucleiSegVal(Dataset):
 	""" Data Loader for Vaidation/Test data"""
-	def __init__(self, path='./Data/Test/', transforms=None, NCHW=True):
+	def __init__(self, path='./Data/Test/', transforms=None):
 		super(NucleiSegVal, self).__init__()
 		self.path = path
 		if self.path[-1] != '/':
 			self.path = self.path + '/'
 		self.transforms = transforms
 		self.list = os.listdir(self.path + 'Images')
-		self.NCHW = NCHW
         
 	def __len__(self):
 		return len(self.list)

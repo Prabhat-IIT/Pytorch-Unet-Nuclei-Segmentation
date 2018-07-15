@@ -62,7 +62,7 @@ def train_net(net,train_set,test_set,epochs=5,batch_size=1,lr=0.1,val_ratio=0.1,
         Epochs: {}
         Batch size: {}
         Learning rate: {}
-    '''.format(epochs, batch_size, lr)
+    '''.format(epochs, batch_size, lr))
     
     print('preparing training data .....')
     train_loader = DataLoader(train_set, batch_size = batch_size, shuffle = True)
