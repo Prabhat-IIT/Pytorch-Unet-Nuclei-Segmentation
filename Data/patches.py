@@ -40,9 +40,9 @@ def createImgPatches(source,patch_size,normalize = True):
         img_path = source + 'image' + str(i) + '.png'
         #mask_path = source + 'image' + str(i) + '_poly.png'   
         binmask_path = source + 'image' + str(i) + '_maskbin.png'
-
+        print(img_path)
         if normalize:
-            img = pad_zeros(batchStainNormalize(io.imread(img_path)[:,:,:3]),patch_size,patch_size,3)
+            img = pad_zeros(batchStainNormalize([io.imread(img_path)[:,:,:3]])[0],patch_size,patch_size,3)
         else:    
             img = pad_zeros(io.imread(img_path)[:,:,:3],patch_size,patch_size,3)
         #mask = pad_zeros(io.imread(mask_path)[:,:,:3],patch_size,patch_size,3)

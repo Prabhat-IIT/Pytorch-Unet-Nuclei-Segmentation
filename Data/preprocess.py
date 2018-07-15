@@ -33,7 +33,7 @@ def stainNormalize(img,method = 'V'):
 
 	if method == 'M':
 		normalizer = M
-
+	print(img.shape)
 	return normalizer.transform(img)	
 
 def batchStainNormalize(batch, method = 'V'):
