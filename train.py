@@ -1,11 +1,7 @@
 import torch # work as numpy here
-import torch.autograd as autograd # builds computational graph
 from torch.autograd import Variable # wraps tensors and helps compute gradient
-import torch.nn as nn # neural net library
-import torch.nn.functional as F # all the non linearities
-import torch.optim as optim # optimization package
 from torch.utils.data import DataLoader
-
+from torchvision import transforms
 import os
 import numpy as np
 from Unet import Unet
@@ -28,8 +24,6 @@ class Average(object):
     @property
     def avg(self):
         return self.sum / self.count
-
-
 
 def dice_loss(input, target):
 	input = torch.sigmoid(input)
