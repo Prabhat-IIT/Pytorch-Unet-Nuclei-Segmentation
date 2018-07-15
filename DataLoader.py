@@ -20,8 +20,8 @@ class NucleiSegTrain(Dataset):
 		return len(self.list)
 
 	def __getitem__(self, index):
-		image_path = 'Train/Image/'
-		mask_path = 'Train/Mask/'
+		image_path = self.path + 'Images/'
+		mask_path = self.path + 'Masks/'
 		image = Image.open(image_path + self.list[index])
 		image = image.convert('RGB')
 		mask = Image.open(mask_path + self.list[index])
@@ -47,8 +47,8 @@ class NucleiSegVal(Dataset):
 		return len(self.list)
 
 	def __getitem__(self, index):
-		image_path = 'Train/Image/'
-		mask_path = 'Train/Mask/'
+		image_path = self.path + 'Images/'
+		mask_path = self.path + 'Masks/'
 		image = Image.open(image_path + self.list[index])
 		image = image.convert('RGB')
 		mask = Image.open(mask_path + self.list[index])
