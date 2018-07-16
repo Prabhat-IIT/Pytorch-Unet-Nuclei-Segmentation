@@ -143,9 +143,10 @@ def train_net(net, train_set, test_set, epochs=40, batch_size=1, lr=0.1, val_rat
 
 if __name__ == '__main__':
     gflags.DEFINE_string('id', None, 'ID for experiment')
+    gflags.DEFINE_string('path', 'Data/', 'Path for Dataset')
     gflags.FLAGS(sys.argv)
-    TRAIN_PATH = './Data/Train'
-    TEST_PATH = './Data/Test'
+    TRAIN_PATH = gflags.FLAGS.path + 'Train'
+    TEST_PATH = gflags.Flag.path + 'Test'
 
     batch_size = 4
     lr = 1e-4
@@ -159,3 +160,4 @@ if __name__ == '__main__':
     net = Unet(3, 1)
 
     train_net(net, train_set, test_set, batch_size=batch_size, lr=lr, id=gflags.FLAGS.id)
+
