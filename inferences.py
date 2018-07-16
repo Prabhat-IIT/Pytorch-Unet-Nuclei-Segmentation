@@ -60,6 +60,7 @@ if __name__ == '__main__':
 
     gflags.DEFINE_string('weight_path', None, 'Best Weight Path')
     gflags.DEFINE_string('id', None, 'ID')
+    gflags.FLAGS(sys.argv)
     if gflags.FLAGS.id is None or gflags.FLAGS.weight_path is None:
         print('Provide the correct arguments')
         sys.exit()

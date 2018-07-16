@@ -9,6 +9,7 @@ from tensorboardX import SummaryWriter
 from Unet import Unet
 from DataLoader import NucleiSegTrain, NucleiSegVal
 import gflags
+import sys
 
 
 class Average(object):
@@ -48,6 +49,7 @@ class SoftDiceLoss(nn.Module):
 def train_net(net, train_set, test_set, epochs=40, batch_size=1, lr=0.1, val_ratio=0.1, save_model=True, id=None):
     writer = SummaryWriter()
     cuda = torch.cuda.is_available()
+    print(id, 'ID')
     if cuda:
         print('Using GPU')
         net = net.cuda()
@@ -135,6 +137,7 @@ def train_net(net, train_set, test_set, epochs=40, batch_size=1, lr=0.1, val_rat
 
 if __name__ == '__main__':
     gflags.DEFINE_string('id', None, 'ID for experiment')
+    gflags.FLAGS(sys.argv)
     TRAIN_PATH = './Data/Train'
     TEST_PATH = './Data/Test'
 
