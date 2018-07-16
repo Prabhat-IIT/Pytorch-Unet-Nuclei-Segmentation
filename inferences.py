@@ -11,6 +11,7 @@ import gflags
 from skimage import morphology, color, io, exposure
 import sys
 
+
 def IoU(y_true, y_pred):
     """Returns Intersection over Union score for ground truth and predicted masks."""
     assert y_true.dtype == bool and y_pred.dtype == bool
@@ -75,7 +76,7 @@ if __name__ == '__main__':
     model_path = gflags.FLAGS.id + '/Weights/' + gflags.FLAGS.weight_path + '.pth.tar'
     net = Unet(3, 1)
 
-    net.load_state_dict(torch.load('./Weights/' + model_path))
+    net.load_state_dict(torch.load(model_path))
     net.eval()
 
     seed = 1

@@ -72,11 +72,11 @@ def train_net(net, train_set, test_set, epochs=40, batch_size=1, lr=0.1, val_rat
     print('preparing training data .....')
     train_loader = DataLoader(train_set, batch_size=batch_size, shuffle=True)
     print('Done .....')
-
     print('preparing validation data .....')
     test_loader = DataLoader(test_set, batch_size=batch_size, shuffle=False)
     print('Done .....')
-
+    train_global_step = 0
+    val_global_step = 0
     for epoch in range(epochs):
         print('Starting epoch {}/{}.'.format(epoch + 1, epochs))
 
@@ -101,9 +101,10 @@ def train_net(net, train_set, test_set, epochs=40, batch_size=1, lr=0.1, val_rat
             train_loss.update(loss.item(), imgs.size(0))
             b_c_e_loss.update(loss2.item(), imgs.size(0))
             dice_loss.update(loss1.item(), imgs.size(0))
-            writer.add_scalar('Train Total Loss', loss, epoch)
-            writer.add_scalar('Train BCE Loss', loss2, epoch)
-            writer.add_scalar('Train Dice Loss', loss1, epoch)
+            train_global_step += 1
+            writer.add_scalar('Train Total Loss', loss, train_global_step)
+            writer.add_scalar('Train BCE Loss', loss2, train_global_step)
+            writer.add_scalar('Train Dice Loss', loss1, train_global_step)
 
         # setting network to evaluation mode
         net.eval()
@@ -123,9 +124,14 @@ def train_net(net, train_set, test_set, epochs=40, batch_size=1, lr=0.1, val_rat
             val_loss.update(vloss.item(), imgs.size(0))
             b_c_e_loss_val.update(vloss2.item(), imgs.size(0))
             dice_loss_val.update(vloss1.item(), imgs.size(0))
-            writer.add_scalar('Val Total Loss', vloss, epoch)
-            writer.add_scalar('Val BCE Loss', vloss2, epoch)
-            writer.add_scalar('Val Dice Loss', vloss1, epoch)
+            val_global_step += 1
+            writer.add_scalar('Val Total Loss', vloss, val_global_step)
+            writer.add_scalar('Val BCE Loss', vloss2, val_global_step)
+            writer.add_scalar('Val Dice Loss', vloss1, val_global_step)
+            if epoch % 10 == 0:
+                writer.add_image('Validation GT', t_masks, epoch)
+                writer.add_image('Validation Prediction', p_masks, epoch)
+                writer.add_image('Validation Input Photos', imgs, epoch)
 
         print(
             "Epoch {}, Total Train Loss: {},BCE Train Loss: {}, Dice Train Loss: {}, Validation Total loss: {}, Validation BCE: {}, Validation Dice: {}".format(
