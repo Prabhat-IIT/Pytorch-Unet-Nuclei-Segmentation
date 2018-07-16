@@ -8,6 +8,7 @@ import os
 from tensorboardX import SummaryWriter
 from Unet import Unet
 from DataLoader import NucleiSegTrain, NucleiSegVal
+import gflags
 
 
 class Average(object):
@@ -44,16 +45,18 @@ class SoftDiceLoss(nn.Module):
         return 1 - ((2. * intersection + smooth) / (iflat.sum() + tflat.sum() + smooth))
 
 
-def train_net(net, train_set, test_set, epochs=25, batch_size=1, lr=0.1, val_ratio=0.1, save_model=True):
+def train_net(net, train_set, test_set, epochs=40, batch_size=1, lr=0.1, val_ratio=0.1, save_model=True, id=None):
     writer = SummaryWriter()
     cuda = torch.cuda.is_available()
     if cuda:
         print('Using GPU')
         net = net.cuda()
-
+    if not os.path.isdir(id):
+        os.mkdir(id)
+    weight_path = id + '/Weights/'
     # Directory for saving weights of network
-    if not os.path.isdir('./Weights'):
-        os.mkdir('./Weights')
+    if not os.path.isdir(weight_path):
+        os.mkdir(weight_path)
     optimizer = torch.optim.Adam(net.parameters(), lr=1e-4)
     criterion1 = SoftDiceLoss().cuda()
     criterion2 = nn.BCEWithLogitsLoss().cuda()
@@ -127,10 +130,11 @@ def train_net(net, train_set, test_set, epochs=25, batch_size=1, lr=0.1, val_rat
                 epoch + 1, train_loss.avg, b_c_e_loss.avg, dice_loss.avg, val_loss.avg, b_c_e_loss_val.avg,
                 dice_loss_val.avg))
         if save_model and epoch > epochs // 2:
-            torch.save(net.state_dict(), './Weights/cp_{}_{}.pth.tar'.format(epoch + 1, val_loss.avg))
+            torch.save(net.state_dict(), weight_path + '{}.pth.tar'.format(epoch + 1))
 
 
 if __name__ == '__main__':
+    gflags.DEFINE_string('id', None, 'ID for experiment')
     TRAIN_PATH = './Data/Train'
     TEST_PATH = './Data/Test'
 
@@ -145,4 +149,4 @@ if __name__ == '__main__':
 
     net = Unet(3, 1)
 
-    train_net(net, train_set, test_set, batch_size=batch_size, lr=lr)
+    train_net(net, train_set, test_set, batch_size=batch_size, lr=lr, id=gflags.FLAGS.id)

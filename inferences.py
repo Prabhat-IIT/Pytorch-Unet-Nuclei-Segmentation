@@ -7,9 +7,9 @@ from DataLoader import NucleiSegVal
 from torchvision import transforms
 import torch.nn.functional as F
 import numpy as np
-
+import gflags
 from skimage import morphology, color, io, exposure
-
+import sys
 
 def IoU(y_true, y_pred):
     """Returns Intersection over Union score for ground truth and predicted masks."""
@@ -58,6 +58,11 @@ def remove_small_regions(img, size):
 
 if __name__ == '__main__':
 
+    gflags.DEFINE_string('weight_path', None, 'Best Weight Path')
+    gflags.DEFINE_string('id', None, 'ID')
+    if gflags.FLAGS.id is None or gflags.FLAGS.weight_path is None:
+        print('Provide the correct arguments')
+        sys.exit()
     # Load test data
     img_size = (256, 256)
 
@@ -66,10 +71,10 @@ if __name__ == '__main__':
     batch_size = 1
 
     # Load model
-    model_name = 'cp_25_0.05852226626414519.pth.tar'
+    model_path = gflags.FLAGS.id + '/Weights/' + gflags.FLAGS.weight_path + '.pth.tar'
     net = Unet(3, 1)
 
-    net.load_state_dict(torch.load('./Weights/' + model_name))
+    net.load_state_dict(torch.load('./Weights/' + model_path))
     net.eval()
 
     seed = 1
