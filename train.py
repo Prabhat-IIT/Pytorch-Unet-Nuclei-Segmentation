@@ -146,7 +146,7 @@ if __name__ == '__main__':
     gflags.DEFINE_string('path', 'Data/', 'Path for Dataset')
     gflags.FLAGS(sys.argv)
     TRAIN_PATH = gflags.FLAGS.path + 'Train'
-    TEST_PATH = gflags.Flag.path + 'Test'
+    TEST_PATH = gflags.FLAGS.path + 'Test'
 
     batch_size = 4
     lr = 1e-4
