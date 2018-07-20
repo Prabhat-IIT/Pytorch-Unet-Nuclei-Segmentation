@@ -26,12 +26,14 @@ Dataset is taken from MICCAI Digital Pathology challenge.
 #### Masks generated
 ![Mask](https://i.imgur.com/AuvbnSb.png "Mask patch")
 
-#### Metrics and Scores
-Mean_Dice =  0.9688823993159364
+#### Metrics and Scores on Validation Dataset
+Mean_Dice =  0.8641389261779585
 
-Mean_F1 =  0.9428892708323233
+Mean_F1 =  0.7577543034961058
 
-Mean_Aggr_Jacard =  0.8937118339301856
+Mean_Aggr_Jacard =  0.6341042531927357
+### Validation Split
+The validation dataset is created using four images from 15 given training images. 
 
 ## Contributing
 
