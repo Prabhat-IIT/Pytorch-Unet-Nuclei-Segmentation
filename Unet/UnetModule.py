@@ -6,36 +6,45 @@ import torch.optim as optim # optimization package
 
 class Dconv(nn.Module):
 	"""Basic block of Conv2d, BatchNorm2d, and Relu layers conneted togather twice"""
-	def __init__(self, In_ch, Out_ch, K_size=3, stride=1, padding=1):
+	def __init__(self, In_ch, Out_ch, K_size=3, stride=1, padding=1, selu=False):
 		super(Dconv, self).__init__()
-		self.conv = nn.Sequential(
-			nn.Conv2d(In_ch, Out_ch, K_size, padding=1),
-			nn.BatchNorm2d(Out_ch),
-			nn.ReLU(inplace=True),
-			nn.Conv2d(Out_ch, Out_ch, K_size, padding=1),
-			nn.BatchNorm2d(Out_ch),
-			nn.ReLU(inplace=True)
-			)
+		if selu:
+			self.conv = nn.Sequential(
+				nn.Conv2d(In_ch, Out_ch, K_size, padding=1),
+				nn.SELU(inplace=True),
+				nn.AlphaDropout(p=0.2),
+				nn.Conv2d(Out_ch, Out_ch, K_size, padding=1),
+				nn.SELU(inplace=True),
+				nn.AlphaDropout(p=0.2))
+		else:
+			self.conv = nn.Sequential(
+				nn.Conv2d(In_ch, Out_ch, K_size, padding=1),
+				nn.BatchNorm2d(Out_ch),
+				nn.ReLU(inplace=True),
+				nn.Conv2d(Out_ch, Out_ch, K_size, padding=1),
+				nn.BatchNorm2d(Out_ch),
+				nn.ReLU(inplace=True)
+				)
 
 	def forward(self,X):
 		return self.conv(X)
 
 class InConv(nn.Module):
 	"""Convolution layer for the input to Unet"""
-	def __init__(self, In_ch, Out_ch):
+	def __init__(self, In_ch, Out_ch, selu=False):
 		super(InConv, self).__init__()
-		self.conv = Dconv(In_ch, Out_ch)
+		self.conv = Dconv(In_ch, Out_ch, selu)
 
 	def forward(self, X):
 		return self.conv(X)
 
 class DownConv(nn.Module):
 	"""Block of layers stacked up togather for Down Convolution"""
-	def __init__(self, In_ch, Out_ch):
+	def __init__(self, In_ch, Out_ch, selu=False):
 		super(DownConv, self).__init__()
 		self.conv = nn.Sequential(
 			nn.MaxPool2d(2),
-			Dconv(In_ch, Out_ch)
+			Dconv(In_ch, Out_ch, selu)
 			)
 
 	def forward(self, X):
@@ -44,7 +53,7 @@ class DownConv(nn.Module):
 
 class UpConv(nn.Module):
 	"""Block of layers stacked up togather for Up Convolution"""
-	def __init__(self, In_ch, Out_ch, learnable=True):
+	def __init__(self, In_ch, Out_ch, learnable=True, selu=False):
 		super(UpConv, self).__init__()
 		
 		# learnable -> parameter to specify if to learn Upsampling or Use extrapolation
@@ -58,7 +67,7 @@ class UpConv(nn.Module):
 			# Out_ch = In_ch//2 since upsampling or transpose convolution doesnot alter count of channels
 			self.up = nn.ConvTranspose2d(In_ch, In_ch//2, kernel_size=2, stride=2)	
 
-		self.conv = Dconv(In_ch,Out_ch)
+		self.conv = Dconv(In_ch,Out_ch,selu)
 
 	def forward(self, X1, X2):
 		# X1 input from below X2 input from left
@@ -72,7 +81,7 @@ class UpConv(nn.Module):
 
 class OutConv(nn.Module):
 	"""Final Output layer with kernel size = 1"""
-	def __init__(self, In_ch, Out_ch):
+	def __init__(self, In_ch, Out_ch):y
 		super(OutConv, self).__init__()
 		self.conv = nn.Conv2d(In_ch, Out_ch,1)
 
